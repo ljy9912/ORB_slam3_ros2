@@ -18,7 +18,7 @@
 
 #include <System.h>
 
-#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "geometry_msgs/msg/pose.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 using namespace std;
@@ -33,8 +33,8 @@ public:
 
 private:
  	// publisher
-  	rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr camera_pose_pub_;
-  	geometry_msgs::msg::PoseStamped camera_pose_msg_;
+  	rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr camera_pose_pub_;
+  	geometry_msgs::msg::Pose camera_pose_msg_;
   	// timer
   	rclcpp::TimerBase::SharedPtr read_timer_;
   	rclcpp::TimerBase::SharedPtr write_timer_;
@@ -83,7 +83,7 @@ void exit_loop_handler(int s){
 ORB2Ros::ORB2Ros() : Node("orb2ros_node")
 {
     camera_pose_pub_ =
-      this->create_publisher<geometry_msgs::msg::PoseStamped>(pub_topic_name, 10);
+      this->create_publisher<geometry_msgs::msg::Pose>(pub_topic_name, 10);
 	
 	this->declare_parameter("Vocabulary", "src/ORB_SLAM3/Vocabulary/ORBvoc.txt");
     this->declare_parameter("Camera_yaml", "src/ORB_SLAM3/Examples/Stereo-Inertial/RealSense_D435i.yaml");  // 默认值可以是不同数据类型
@@ -395,27 +395,32 @@ ORB2Ros::ORB2Ros() : Node("orb2ros_node")
         // SLAM.TrackStereo(im, imRight, timestamp, vImuMeas);
 		Sophus::SE3f Tcw = SLAM.TrackStereo(im, imRight, timestamp, vImuMeas);
 		Sophus::SE3f Twc = Tcw.inverse(); // Twc is imu optical frame pose in ROS FLU map coordinate
+        
         Eigen::Matrix<float, 3, 3> cv_to_ros_rot; 
         Eigen::Matrix<float, 3, 1> cv_to_ros_trans; 
-        cv_to_ros_rot << 0, 0, 1,
-                        -1, 0, 0,
-                        0, -1, 0;
+
+        cv_to_ros_rot << -1, 0, 0,
+                  0, -1, 0,
+                  0, 0, 1;
         cv_to_ros_trans << 0, 0, 0;
         Sophus::SE3f cv_to_ros(cv_to_ros_rot, cv_to_ros_trans);
-        std::cout << cv_to_ros.matrix() << std::endl; 
+        Twc = cv_to_ros * Twc;
+        
+        camera_pose_msg_.position.x = Twc.translation().x();
+        camera_pose_msg_.position.y = Twc.translation().y();
+        camera_pose_msg_.position.z = Twc.translation().z();
 
-        // coordiante transform
-        Twc = Twc * cv_to_ros.inverse();
-        camera_pose_msg_.header.stamp = this -> now();
+        Eigen::Matrix<float, 3, 3> cv_to_ros_rot2; 
+        cv_to_ros_rot2 << 1, 0, 0,
+                  0, 0, -1,
+                  0, 1, 0;
+        Sophus::SE3f cv_to_ros2(cv_to_ros_rot2, cv_to_ros_trans);
+        Twc = Twc * cv_to_ros2;
 
-        camera_pose_msg_.pose.position.x = Twc.translation().x();
-        camera_pose_msg_.pose.position.y = Twc.translation().y();
-        camera_pose_msg_.pose.position.z = Twc.translation().z();
-
-        camera_pose_msg_.pose.orientation.w = Twc.unit_quaternion().coeffs().w();
-        camera_pose_msg_.pose.orientation.x = Twc.unit_quaternion().coeffs().x();
-        camera_pose_msg_.pose.orientation.y = Twc.unit_quaternion().coeffs().y();
-        camera_pose_msg_.pose.orientation.z = Twc.unit_quaternion().coeffs().z();
+        camera_pose_msg_.orientation.w = Twc.unit_quaternion().coeffs().w();
+        camera_pose_msg_.orientation.x = Twc.unit_quaternion().coeffs().x();
+        camera_pose_msg_.orientation.y = Twc.unit_quaternion().coeffs().y();
+        camera_pose_msg_.orientation.z = - Twc.unit_quaternion().coeffs().z();
 		
 		camera_pose_pub_ -> publish(camera_pose_msg_);
 #ifdef REGISTER_TIMES

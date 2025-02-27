@@ -63,7 +63,7 @@ Run the built node using
 ```bash
 source /opt/ros/humble/setup.bash
 source install/setup.bash
-ros2 run orb_slam3 orb_slam3_node <Your vocabulary> <Your configuration file>
+ros2 run orb_slam3 orb_slam3_node --ros-args -p Vocabulary:=<Your vocabulary> -p Camera_yaml:=<Your configuration file>
 ```
 
 `<Your vocabulary>` for Realsense D435i can be found under `Vocabulary/ORBvoc.txt`.
