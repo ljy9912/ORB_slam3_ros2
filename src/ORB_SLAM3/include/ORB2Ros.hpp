@@ -404,7 +404,7 @@ ORB2Ros::ORB2Ros() : Node("orb2ros_node")
                   0, 0, 1;
         cv_to_ros_trans << 0, 0, 0;
         Sophus::SE3f cv_to_ros(cv_to_ros_rot, cv_to_ros_trans);
-        Twc = cv_to_ros * Twc;
+        // Twc = cv_to_ros * Twc;
         
         camera_pose_msg_.position.x = Twc.translation().x();
         camera_pose_msg_.position.y = Twc.translation().y();

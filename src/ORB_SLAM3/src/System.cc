@@ -1497,15 +1497,15 @@ bool System::LoadAtlas(int type)
         //Check if the vocabulary is the same
         string strInputVocabularyChecksum = CalculateCheckSum(mStrVocabularyFilePath,TEXT_FILE);
 
-        if(strInputVocabularyChecksum.compare(strVocChecksum) != 0)
-        {
-            cout << "The vocabulary load isn't the same which the load session was created " << endl;
-            cout << "-Vocabulary name: " << strFileVoc << endl;
-            return false; // Both are differents
-        }
+        // if(strInputVocabularyChecksum.compare(strVocChecksum) != 0)
+        // {
+        //     cout << "The vocabulary load isn't the same which the load session was created " << endl;
+        //     cout << "-Vocabulary name: " << strFileVoc << endl;
+        //     return false; // Both are differents
+        // }
 
         mpAtlas->SetKeyFrameDababase(mpKeyFrameDatabase);
-        mpAtlas->SetORBVocabulary(mpVocabulary);
+        // mpAtlas->SetORBVocabulary(mpVocabulary);
         mpAtlas->PostLoad();
 
         return true;

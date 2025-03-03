@@ -101,3 +101,6 @@ log/*
 src/ORB_SLAM3/log/*
 src/ORB_SLAM3/build/*
 src/ORB_SLAM3/lib/*
+
+test/*
+tracker_realsense_1/*
