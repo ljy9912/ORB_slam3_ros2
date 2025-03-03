@@ -1,0 +1,1 @@
+python ./arm_calibration.py --wrist-topic /manus_tracker_left --shoulder-topic /manus_tracker_right --duration 120

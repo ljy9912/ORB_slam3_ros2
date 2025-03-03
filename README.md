@@ -14,6 +14,7 @@ We use [Pangolin](https://github.com/stevenlovegrove/Pangolin) for visualization
 
 Follow the building instructions and then install the files:
 ```bash
+cd build
 sudo make install
 ```
 

@@ -3,7 +3,7 @@ import rclpy
 from rclpy.serialization import deserialize_message
 from rosidl_runtime_py.utilities import get_message
 import csv
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Pose
 import sys
 
 def main():
@@ -32,9 +32,9 @@ def main():
         # 遍历所有消息
         while reader.has_next():
             topic, data, t = reader.read_next()
-            if topic == '/vrpn/trailer/pose':  # 替换为你的轨迹话题
-                msg = deserialize_message(data, PoseStamped)
-                pose = msg.pose
+            if topic == '/camera_pose':  # 替换为你的轨迹话题
+                msg = deserialize_message(data, Pose)
+                pose = msg
                 writer.writerow([
                     t, 
                     pose.position.x, pose.position.y, pose.position.z,
