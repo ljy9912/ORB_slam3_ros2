@@ -1,3 +1,4 @@
 geometry_msgs/Vector3 ps
 geometry_msgs/Vector3 offset
+geometry_msgs/Quaternion rotation
 float64 residual

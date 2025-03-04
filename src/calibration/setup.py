@@ -23,6 +23,7 @@ setup(
     entry_points={
         'console_scripts': [
             'calibration_node = calibration.calibration_node:main',
+            'calib_pose_node = calibration.calib_pose_node:main',
         ],
     },
 )
