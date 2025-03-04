@@ -35,7 +35,8 @@ class CalibPoseNode(Node):
         # 提取位置 (pc) 和四元数 (q)
         self.msg = msg
         position = np.dot(self.rotation.as_matrix(), (np.array([msg.position.x, msg.position.y, msg.position.z]) - self.ps))
-        orientation = (self.rotation * R.from_quat(np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w]))).as_quat()
+        orientation = (self.rotation * R.from_quat(np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w]))) * R.from_matrix([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+        orientation = orientation.as_quat()
         pose_msg = Pose()
         pose_msg.position.x = position[0]
         pose_msg.position.y = position[1]

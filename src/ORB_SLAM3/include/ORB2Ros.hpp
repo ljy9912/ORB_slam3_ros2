@@ -411,16 +411,23 @@ ORB2Ros::ORB2Ros() : Node("orb2ros_node")
         camera_pose_msg_.position.z = Twc.translation().z();
 
         Eigen::Matrix<float, 3, 3> cv_to_ros_rot2; 
+        Eigen::Matrix<float, 3, 3> cv_to_ros_rot3; 
         cv_to_ros_rot2 << 1, 0, 0,
                   0, 0, -1,
                   0, 1, 0;
+        cv_to_ros_rot3 << 0, -1, 0,
+            1, 0, 0,
+            0, 0, 1;
+        
+
         Sophus::SE3f cv_to_ros2(cv_to_ros_rot2, cv_to_ros_trans);
-        Twc = Twc * cv_to_ros2;
+        Sophus::SE3f cv_to_ros3(cv_to_ros_rot3, cv_to_ros_trans);
+        Twc = Twc * cv_to_ros2 * cv_to_ros3;
 
         camera_pose_msg_.orientation.w = Twc.unit_quaternion().coeffs().w();
         camera_pose_msg_.orientation.x = Twc.unit_quaternion().coeffs().x();
         camera_pose_msg_.orientation.y = Twc.unit_quaternion().coeffs().y();
-        camera_pose_msg_.orientation.z = - Twc.unit_quaternion().coeffs().z();
+        camera_pose_msg_.orientation.z = Twc.unit_quaternion().coeffs().z();
 		
 		camera_pose_pub_ -> publish(camera_pose_msg_);
 #ifdef REGISTER_TIMES

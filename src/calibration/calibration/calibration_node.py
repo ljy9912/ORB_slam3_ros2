@@ -112,7 +112,7 @@ class CalibrationNode(Node):
         result_msg.rotation.z = self.rotation[2]
         result_msg.rotation.w = self.rotation[3]
         self.ls_residual = self.residual
-        print('Residual', self.residual)
+        # print('Residual', self.residual)
         self.publisher.publish(result_msg)
         self.msg = msg
 
