@@ -57,8 +57,10 @@ class CalibPoseNode(Node):
         self.get_logger().info('收到Pose，发送已校准的pose.')
 
     def compute_wrist_pose(self):
-        pww = -self.msg.orientation * self.wrist_offset + self.position
+        pww = np.dot(self.orientation.as_matrix(), np.array([-self.wrist_offset, 0, 0])) + self.position
+
         psw = np.dot(self.rotation.as_matrix(), (pww + self.ps))
+        print('psw', psw)
         pose_msg = Pose()
         pose_msg.position.x = psw[0]
         pose_msg.position.y = psw[1]

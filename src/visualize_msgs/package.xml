@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>get_pose</name>
+  <name>visualize_msgs</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="lijiayun22@mails.tsinghua.edu.cn">jiayun</maintainer>
   <license>TODO: License declaration</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <depend>geometry_msgs</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
