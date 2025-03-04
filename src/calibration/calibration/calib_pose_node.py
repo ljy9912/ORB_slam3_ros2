@@ -7,8 +7,8 @@ from geometry_msgs.msg import Pose
 from calibration_msg.msg import CalibrationResult
 
 class CalibPoseNode(Node):
-    def __init__(self):
-        super().__init__('calibration_node')
+    def __init__(self, wrist_offset=0.05):
+        super().__init__('calib_pose_node')
         
         # 订阅相机位姿
         self.subCam = self.create_subscription(
@@ -28,26 +28,46 @@ class CalibPoseNode(Node):
             '/camera_pose_calibrated',
             10
         )
+        self.pubWrist = self.create_publisher(
+            Pose,
+            '/wrist_pose',
+            10
+        )
         self.ps = np.zeros(3)
         self.rotation = R.from_quat([0., 0., 0., 1.])
+        self.wrist_offset = wrist_offset
         
     def pose_callback(self, msg):
         # 提取位置 (pc) 和四元数 (q)
         self.msg = msg
-        position = np.dot(self.rotation.as_matrix(), (np.array([msg.position.x, msg.position.y, msg.position.z]) - self.ps))
-        orientation = (self.rotation * R.from_quat(np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w]))) * R.from_matrix([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
-        orientation = orientation.as_quat()
+        self.position_cal = np.dot(self.rotation.as_matrix(), (np.array([msg.position.x, msg.position.y, msg.position.z]) - self.ps))
+        self.orientation_cal = (self.rotation * R.from_quat(np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w]))) * R.from_matrix([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+        self.orientation_cal = self.orientation_cal.as_quat()
         pose_msg = Pose()
-        pose_msg.position.x = position[0]
-        pose_msg.position.y = position[1]
-        pose_msg.position.z = position[2]
-        pose_msg.orientation.x = orientation[0]
-        pose_msg.orientation.y = orientation[1]
-        pose_msg.orientation.z = orientation[2]
-        pose_msg.orientation.w = orientation[3]
+        pose_msg.position.x = self.position_cal[0]
+        pose_msg.position.y = self.position_cal[1]
+        pose_msg.position.z = self.position_cal[2]
+        pose_msg.orientation.x = self.orientation_cal[0]
+        pose_msg.orientation.y = self.orientation_cal[1]
+        pose_msg.orientation.z = self.orientation_cal[2]
+        pose_msg.orientation.w = self.orientation_cal[3]
         self.pubPose.publish(pose_msg)
 
-        # self.get_logger().info('收到Pose，发送已校准的pose.')
+        self.compute_wrist_pose()
+        self.get_logger().info('收到Pose，发送已校准的pose.')
+
+    def compute_wrist_pose(self):
+        pww = -self.msg.orientation * self.wrist_offset + self.position
+        psw = np.dot(self.rotation.as_matrix(), (pww + self.ps))
+        pose_msg = Pose()
+        pose_msg.position.x = psw[0]
+        pose_msg.position.y = psw[1]
+        pose_msg.position.z = psw[2]
+        pose_msg.orientation.x = self.orientation_cal[0]
+        pose_msg.orientation.y = self.orientation_cal[1]
+        pose_msg.orientation.z = self.orientation_cal[2]
+        pose_msg.orientation.w = self.orientation_cal[3]
+        self.pubWrist.publish(pose_msg)
 
     def calib_callback(self, msg):
         ps = msg.ps
