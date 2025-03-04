@@ -46,14 +46,14 @@ class CalibPoseNode(Node):
         pose_msg.orientation.w = orientation[3]
         self.pubPose.publish(pose_msg)
 
-        self.get_logger().info('收到Pose，发送已校准的pose.')
+        # self.get_logger().info('收到Pose，发送已校准的pose.')
 
     def calib_callback(self, msg):
         ps = msg.ps
         self.ps = np.array([ps.x, ps.y, ps.z])
         self.rotation = R.from_quat(np.array([msg.rotation.x, msg.rotation.y, msg.rotation.z, msg.rotation.w]))
 
-        self.get_logger().info('收到标定结果，更新校准参数.')
+        # self.get_logger().info('收到标定结果，更新校准参数.')
 
 def main(args=None):
     rclpy.init(args=args)
