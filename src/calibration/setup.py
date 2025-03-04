@@ -1,27 +1,28 @@
-from setuptools import setup
+from setuptools import find_packages, setup
+import os
+from glob import glob
 
 package_name = 'calibration'
 
 setup(
     name=package_name,
-    version='0.0.0',
-    packages=[package_name],
+    version='0.0.1',
+    packages=find_packages(exclude=['test']),
     data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        # 安装 launch 文件
-        ('share/' + package_name + '/launch', ['launch/joint_calibration.launch.py']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Your Name',
-    maintainer_email='you@example.com',
-    description='Python 节点示例包',
-    license='Apache-2.0',
+    maintainer='jiayun',
+    maintainer_email='lijiayun22@mails.tsinghua.edu.cn',
+    description='TODO: Package description',
+    license='TODO: License declaration',
     tests_require=['pytest'],
-    # 关键配置：定义可执行入口点
     entry_points={
         'console_scripts': [
-            'joint_calibration_node = calibration.joint_calibration_node:main'        # 格式：节点名=包.模块:主函数
+            'calibration_node = calibration.calibration_node:main',
         ],
     },
 )

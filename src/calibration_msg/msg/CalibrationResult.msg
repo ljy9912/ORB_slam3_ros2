@@ -1,0 +1,3 @@
+geometry_msgs/Vector3 ps
+geometry_msgs/Vector3 offset
+float64 residual
