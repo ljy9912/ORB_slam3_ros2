@@ -34,9 +34,7 @@ class CalibPoseNode(Node):
             10
         )
         self.ps = np.zeros(3)
-        self.rotation = R.from_quat([0., 0., 0., 1.])
-        self.wrist_offset = wrist_offset
-        
+        self.rotation 
     def pose_callback(self, msg):
         # 提取位置 (pc) 和四元数 (q)
         self.msg = msg
