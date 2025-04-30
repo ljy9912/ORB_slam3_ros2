@@ -143,7 +143,6 @@ ORB2Ros::ORB2Ros() : Node("orb2ros_node")
     cfg.enable_stream(RS2_STREAM_INFRARED, 2, 640, 480, RS2_FORMAT_Y8, 30);
     cfg.enable_stream(RS2_STREAM_ACCEL, RS2_FORMAT_MOTION_XYZ32F);
     cfg.enable_stream(RS2_STREAM_GYRO, RS2_FORMAT_MOTION_XYZ32F);
-	cout << "Hello world!" << endl;
 
     auto imu_callback = [&](const rs2::frame& frame)
     {

@@ -45,17 +45,18 @@ Can be installed via apt on ubuntu.
 ## 3. Build ORB-SLAM3 library and Ros Node
 
 Clone the repository:
-```
+```bash
 mkdir -p orb_slam3_ros2_ws/src
 cd orb_slam3_ros2_ws/src
 git clone xxx
 ```
 
 We provide a script `build.sh` to build the *Thirdparty* libraries and *ORB-SLAM3*. Please make sure you have installed all required dependencies (see section 2). Execute:
-```
+```bash
 cd ../..
+source /opt/ros/humble/setup.bash # or your ros humble setup path
 chmod +x build.sh
-./build.sh
+./build.sh # This may need a while
 ```
 
 ## 4. Running with Intel Realsense D435i
@@ -70,3 +71,8 @@ ros2 run orb_slam3 orb_slam3_node --ros-args -p Vocabulary:=<Your vocabulary> -p
 `<Your vocabulary>` for Realsense D435i can be found under `Vocabulary/ORBvoc.txt`.
 
 `<Your configuration file>` for Realsense D435i can be found under `Examples/Stereo-Intertial/RealSense_D435i.yaml`. See [ORB_SLAM3](https://github.com/UZ-SLAMLab/ORB_SLAM3) for more details.
+
+Publishers:
+- topic: `/camera_pose`, type: `geometry_msgs/msg/Pose`
+
+Sample usage can be seen in `src/visualize_msgs`.

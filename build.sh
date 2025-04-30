@@ -24,8 +24,8 @@ cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j
 
-cd ../../../
+cd ../../../../..
 
-echo "Configuring and building ORB_SLAM3 ..."
+echo "Configuring and building ORB_SLAM3 ros2 node..."
 
 colcon build

@@ -152,8 +152,8 @@ target_link_libraries(${PROJECT_NAME}
 ${OpenCV_LIBS}
 ${EIGEN3_LIBS}
 ${Pangolin_LIBRARIES}
-/home/jiayun/Documents/orb_slam/orb_slam3_ros2_ws/src/ORB_SLAM3/Thirdparty/DBoW2/lib/libDBoW2.so
-/home/jiayun/Documents/orb_slam/orb_slam3_ros2_ws/src/ORB_SLAM3/Thirdparty/g2o/lib/libg2o.so
+${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
+${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
 -lboost_serialization
 -lcrypto
 )

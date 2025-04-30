@@ -101,7 +101,12 @@ log/*
 src/ORB_SLAM3/log/*
 src/ORB_SLAM3/build/*
 src/ORB_SLAM3/lib/*
+src/log/*
+src/build/*
+src/install/*
 
 test/*
 tracker_realsense_1/*
+.vscode/*
+
 .vscode/*
